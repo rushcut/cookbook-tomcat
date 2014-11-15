@@ -5,11 +5,22 @@ driver:
 provisioner:
   name: chef_solo
 
+driver_config:
+  customize:
+    memory: 1024
+
 platforms:
   - name: ubuntu-12.04
+    driver_config:
+      network:
+        - ["private_network", {ip: "33.33.50.91"}]
   - name: centos-6.4
+    driver_config:
+      network:
+        - ["private_network", {ip: "33.33.50.92"}]
 
 suites:
   - name: default
     run_list:
+      - recipe[tomcat]
     attributes:
