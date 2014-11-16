@@ -8,19 +8,35 @@ provisioner:
 driver_config:
   customize:
     memory: 1024
+    cpus: 2
+    natdnsproxy1: "off"
+    natdnshostresolver1: "off"
 
 platforms:
   - name: ubuntu-12.04
     driver_config:
       network:
         - ["private_network", {ip: "33.33.50.91"}]
+    run_list:
+      - recipe[apt]
   - name: centos-6.4
     driver_config:
       network:
         - ["private_network", {ip: "33.33.50.92"}]
+    run_list:
+      - recipe[yum-epel]
 
 suites:
   - name: default
     run_list:
-      - recipe[tomcat]
+      - recipe[java]
+      - recipe[nginx]
+      - recipe[tomcat::nginx]
     attributes:
+      nginx:
+        default_site_enabled: true
+      java:
+        jdk_version: 7
+      tomcat:
+        nginx:
+          server_name: "foo.example.com"
